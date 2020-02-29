@@ -1,5 +1,5 @@
 <template>
-  <div class="cell">[{{row}}, {{column}}]</div>
+  <div class="cell" v-on:click="emitCoords" v-bind:class="[{ selected: isSelected}, {clFixed: isFixed }]">{{ (value != 0) ? value : ''}}</div>
 </template>
 
 <script>
@@ -7,11 +7,14 @@ export default {
   name: "Cell",
   data: () => {
     return {
-      number: 0,
+      number: 0
     };
   },
   props: {
-    x: Number
+    x: Number,
+    selectedX: Number,
+    value: Number,
+    fixed: Boolean
   },
   computed: {
     row: function() {
@@ -19,6 +22,17 @@ export default {
     },
     column: function() {
       return (this.x % 9) + 1;
+    },
+    isSelected: function() {
+      return this.selectedX == this.x;
+    },
+    isFixed: function() {
+      return this.fixed;
+    }
+  },
+  methods: {
+    emitCoords: function() {
+      this.$emit('sayHi', this.x)
     }
   }
 };
@@ -33,5 +47,14 @@ export default {
   height: 50px;
   text-align: center;
   line-height: 50px;
+  font-size: 2em;
+  color: blue;
+}
+.selected {
+  background-color: yellow;
+}
+.clFixed {
+  font-weight: bold;
+  color: black;
 }
 </style>

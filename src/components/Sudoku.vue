@@ -1,33 +1,19 @@
 <template>
   <div class="sudoku">
-    <div class="row">
-      <square squareRow=1 squareColumn=1></square>
-      <square squareRow=1 squareColumn=2></square>
-      <square squareRow=1 squareColumn=3></square>
-    </div>
-    <div class="row">
-      <square squareRow=2 squareColumn=1></square>
-      <square squareRow=2 squareColumn=2></square>
-      <square squareRow=2 squareColumn=3></square>
-    </div>
-    <div class="row">
-      <square squareRow=3 squareColumn=1></square>
-      <square squareRow=3 squareColumn=2></square>
-      <square squareRow=3 squareColumn=3></square>
-    </div>
+    <cell v-for="x of Array(81).keys()" :key="x" v-bind:x="x">{{x}}</cell>
   </div>
 </template>
 
 <script>
-import Square from './Square.vue'
+import Cell from './Cell.vue'
 
 export default {
   name: 'Sudoku',
   components: {
-    Square
+    Cell
   },
   props: {
-    msg: String
+    msg: String,
   }
 }
 </script>
@@ -35,7 +21,8 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .sudoku {
-  grid-template-columns: auto 300px 300px 300px auto;
-  grid-template-rows: 300px 300px 300px;
+  display: inline-grid;
+  grid-template-columns: auto auto auto auto auto auto auto auto auto;
+  /* grid-template-rows: 55px 55px 55px 55px 55px 55px 55px 55px 55px; */
 }
 </style>

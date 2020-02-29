@@ -1,18 +1,27 @@
 <template>
-  <div class="cell">
-    [{{row}}, {{column}}]
-  </div>
+  <div class="cell">[{{row}}, {{column}}]</div>
 </template>
 
 <script>
 export default {
-  name: 'Cell',
+  name: "Cell",
+  data: () => {
+    return {
+      number: 0,
+    };
+  },
   props: {
-    number: Number,
-    row: Number,
-    column: Number
+    x: Number
+  },
+  computed: {
+    row: function() {
+      return ((this.x - (this.x % 9)) / 9) + 1;
+    },
+    column: function() {
+      return (this.x % 9) + 1;
+    }
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

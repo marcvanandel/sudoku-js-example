@@ -73,7 +73,7 @@ export default {
   },
   computed: {
     msg: function() {
-      return "selected: " + this.selected + "; " + this.question;
+      return "Cell nummer: " + this.selected + "; " + this.question;
     }
   },
   methods: {
@@ -113,6 +113,15 @@ export default {
       for (let index = 0; index < this.data.length; index++) {
         this.data[index].value = 0;
       }
+
+      // TODO reset vult standaard Sudoku in
+
+      this.data.forEach(element => {
+        if (element.value > 0) {
+          element.fixed = true;
+        }
+      });
+
       this.selected = 0;
       this.gameFixed = false;
       this.$refs["prepare"].checked = true;

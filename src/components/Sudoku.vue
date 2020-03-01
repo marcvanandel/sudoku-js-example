@@ -1,8 +1,9 @@
 <template>
-  <div id="sudoku">
+  <div id="sudoku" v-bind:class="{ prepareMode : !gameFixed }">
     <div class="info">
       <p>{{ msg }}</p>
-      <button id="reset" v-on:click="reset">Reset</button>
+      <button id="reset" v-on:click="newGame">Nieuw</button>
+      <button id="reset" v-on:click="reset">Reset (deze puzzel)</button>
       <input
         type="radio"
         id="prepare"
@@ -13,7 +14,14 @@
         v-on:click="toggleFixed"
       />
       <label for="prepare">Instellen</label>
-      <input type="radio" id="play" name="gameMode" value="play" v-on:click="toggleFixed" />
+      <input
+        type="radio"
+        id="play"
+        name="gameMode"
+        value="play"
+        ref="play"
+        v-on:click="toggleFixed"
+      />
       <label for="play">Spelen</label>
     </div>
     <div class="big-grid">
@@ -66,14 +74,13 @@ export default {
     return {
       squares: sqs,
       data: data,
-      selected: 0,
-      gameFixed: false,
-      question: ""
+      selected: 40,
+      gameFixed: false
     };
   },
   computed: {
     msg: function() {
-      return "Cell nummer: " + this.selected + "; " + this.question;
+      return "Cell nummer: " + this.selected;
     }
   },
   methods: {
@@ -85,7 +92,6 @@ export default {
     },
     handleInput: function(c) {
       if (!isNaN(c) && (!this.gameFixed || !this.data[this.selected].fixed)) {
-        this.question = +c;
         this.data[this.selected].value = +c;
         this.data[this.selected].fixed = !this.gameFixed;
         // console.log(JSON.stringify(this.data[this.selected]));
@@ -110,25 +116,36 @@ export default {
       if (this.selected % 9 < 8) this.selected = this.selected + 1;
     },
     reset: function() {
-      for (let index = 0; index < this.data.length; index++) {
-        this.data[index].value = 0;
-      }
+      this.data
+        .filter(element => !element.fixed)
+        .forEach(element => (element.value = 0));
 
-      // TODO reset vult standaard Sudoku in
-
+      this.selected = 40;
+      this.gameFixed = false;
+      this.$refs["play"].checked = true;
+      document.activeElement.blur();
+    },
+    newGame: function() {
       this.data.forEach(element => {
-        if (element.value > 0) {
-          element.fixed = true;
-        }
+        element.value = 0;
+        element.fixed = false;
       });
 
-      this.selected = 0;
+      // TODO newGame vult standaard Sudoku in
+
+      this.data
+        .filter(el => el.value > 0)
+        .forEach(element => (element.fixed = true));
+
+      this.selected = 40;
       this.gameFixed = false;
       this.$refs["prepare"].checked = true;
       document.activeElement.blur();
     },
     toggleFixed: function() {
-      this.gameFixed = !this.gameFixed;
+      let mode = this.$refs["play"].checked;
+      this.gameFixed = "" + mode == "true";
+      // this.gameFixed = !this.gameFixed;
       document.activeElement.blur();
     }
   },
@@ -162,6 +179,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.prepareMode {
+  background-color: lightgray;
+}
 .info {
   margin: 10px;
   display: block;

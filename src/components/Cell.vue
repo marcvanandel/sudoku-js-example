@@ -1,8 +1,10 @@
 <template>
-  <div class="cell" v-on:click="emitCoords" v-bind:class="[{ selected: isSelected}, {clFixed: isFixed }]">{{ (value != 0) ? value : ''}}</div>
+  <div class="cell" v-on:click="emitCoords" v-bind:class="[{ selected: isSelected}, {clFixed: isFixed }]">{{ (data.value != 0) ? data.value : ''}}</div>
 </template>
 
 <script>
+import Data from "./Data.js";
+
 export default {
   name: "Cell",
   data: () => {
@@ -11,28 +13,26 @@ export default {
     };
   },
   props: {
-    x: Number,
+    data: Data,
     selectedX: Number,
-    value: Number,
-    fixed: Boolean
   },
   computed: {
     row: function() {
-      return ((this.x - (this.x % 9)) / 9) + 1;
+      return ((this.data.id - (this.data.id % 9)) / 9) + 1;
     },
     column: function() {
-      return (this.x % 9) + 1;
+      return (this.data.id % 9) + 1;
     },
     isSelected: function() {
-      return this.selectedX == this.x;
+      return this.selectedX == this.data.id;
     },
     isFixed: function() {
-      return this.fixed;
+      return this.data.fixed;
     }
   },
   methods: {
     emitCoords: function() {
-      this.$emit('sayHi', this.x)
+      this.$emit('sayHi', this.data.id)
     }
   }
 };
@@ -41,7 +41,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .cell {
-  display: inline-block;
+  /* display: inline-block; */
   border: 1px solid black;
   width: 50px;
   height: 50px;
